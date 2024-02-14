@@ -1,12 +1,27 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Data;
+
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
+import java.time.Duration;
+import java.time.LocalDate;
 
 /**
  * Film.
  */
-@Getter
-@Setter
+@Data
+@Builder
 public class Film {
+    protected int id;
+    @NotEmpty(message = "Имя не может быть пустым")
+    protected String name;
+    @Size(max = 200, message = "Максимальная длина описания — 200 символов")
+    protected String description;
+    protected LocalDate releaseDate;
+    @Positive(message = "Продолжительность фильма должна быть положительным числом")
+    protected int duration;
 }
