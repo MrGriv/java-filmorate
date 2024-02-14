@@ -10,9 +10,6 @@ import javax.validation.constraints.Size;
 import java.time.Duration;
 import java.time.LocalDate;
 
-/**
- * Film.
- */
 @Data
 @Builder
 public class Film {
