@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.ConstraintViolation;
@@ -18,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
     private Validator validator;
-    private final UserController userController = new UserController();
 
     @BeforeEach
     public void setup() {
@@ -75,12 +73,13 @@ class UserControllerTest {
     public void userLoginMustBeWithoutBlancValidation() {
         User user = User.builder()
                 .id(1)
-                .login("Nick  Name")
+                .login("Nic Name")
                 .name("vasia")
                 .email("mail@mail.ru")
-                .birthday(LocalDate.of(2025, Month.AUGUST, 20))
+                .birthday(LocalDate.of(2020, Month.AUGUST, 20))
                 .build();
 
-        assertThrows(ValidationException.class, () -> userController.create(user));
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertFalse(violations.isEmpty());
     }
 }

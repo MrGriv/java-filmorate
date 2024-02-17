@@ -2,11 +2,11 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Builder;
 import lombok.Data;
+import ru.yandex.practicum.filmorate.annotation.AfterOrEqualDate;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
 
 @Data
 @Builder
@@ -16,7 +16,9 @@ public class Film {
     protected String name;
     @Size(max = 200, message = "Максимальная длина описания — 200 символов")
     protected String description;
-    protected LocalDate releaseDate;
+    @AfterOrEqualDate(value = "1895-12-28",
+            message = "Дата релиза не может быть раньше 28 декабря 1895 года или неверный формат yyyy-mm-dd")
+    protected String releaseDate;
     @Positive(message = "Продолжительность фильма должна быть положительным числом")
     protected int duration;
 }
