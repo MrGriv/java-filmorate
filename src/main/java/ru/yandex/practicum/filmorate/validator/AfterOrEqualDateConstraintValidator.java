@@ -17,7 +17,7 @@ public class AfterOrEqualDateConstraintValidator implements ConstraintValidator<
 
     @Override
     public boolean isValid(String targetDate, ConstraintValidatorContext cxt) {
-        if(targetDate == null) {
+        if (targetDate == null) {
             return false;
         }
 
