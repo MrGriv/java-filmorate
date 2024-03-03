@@ -1,61 +1,63 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import javax.validation.Valid;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-@Slf4j
 @RequestMapping
 @RestController
 public class UserController {
-    private final Map<Integer, User> users = new HashMap<>();
-    private int id = 0;
+    private final UserService userService;
+    private final UserStorage userStorage;
+
+    public UserController(UserService userService, InMemoryUserStorage userStorage) {
+        this.userService = userService;
+        this.userStorage = userStorage;
+    }
 
     @GetMapping("/users")
     public Collection<User> findAll() {
-        return users.values();
+        return userStorage.findAll();
+    }
+
+    @GetMapping("/users/{id}")
+    public User findUser(@PathVariable int id) {
+        return userStorage.findUser(id);
+    }
+
+    @GetMapping("/users/{id}/friends")
+    public List<User> getFriends(@PathVariable int id) {
+        return userService.getFriends(id);
+    }
+
+    @GetMapping("/users/{id}/friends/common/{otherId}")
+    public List<User> getCommonFriends(@PathVariable int id, @PathVariable int otherId) {
+        return userService.getCommonFriends(id, otherId);
     }
 
     @PostMapping(value = "/users")
-    public User create(@Valid @RequestBody User user) {
-
-        user.setId(++id);
-
-        log.trace("user: {}", user);
-
-        users.put(user.getId(), user);
-
-        if (users.get(user.getId()).getName() == null) {
-            user.setName(user.getLogin());
-            users.put(user.getId(), user);
-        }
-
-        return users.get(user.getId());
+    public User createUser(@Valid @RequestBody User user) {
+        return userStorage.createUser(user);
     }
 
     @PutMapping("/users")
-    public User putUser(@Valid @RequestBody User user) {
+    public User updateUser(@Valid @RequestBody User user) {
+        return userStorage.updateUser(user);
+    }
 
-        log.trace("user: {}", user);
+    @PutMapping("/users/{id}/friends/{friendId}")
+    public void addFriend(@PathVariable int id, @PathVariable int friendId) {
+        userService.addFriend(id, friendId);
+    }
 
-        if (users.containsKey(user.getId())) {
-            users.replace(user.getId(), users.get(user.getId()), user);
-
-            if (users.get(user.getId()).getName() == null) {
-                user.setName(user.getLogin());
-                users.put(user.getId(), user);
-            }
-
-        } else {
-            throw new ValidationException("Нет такого пользователя для обновления");
-        }
-
-        return users.get(user.getId());
+    @DeleteMapping("/users/{id}/friends/{friendId}")
+    public void deleteFriend(@PathVariable int id, @PathVariable int friendId) {
+        userService.deleteFriend(id, friendId);
     }
 }

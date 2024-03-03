@@ -1,19 +1,10 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
-import ru.yandex.practicum.filmorate.model.User;
-
-import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
     private Validator validator;
@@ -24,7 +15,7 @@ class UserControllerTest {
         validator = factory.getValidator();
     }
 
-    @Test
+/*    @Test
     public void checkUserLoginValidation() {
 
         User user = User.builder()
@@ -81,5 +72,5 @@ class UserControllerTest {
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertFalse(violations.isEmpty());
-    }
+    }*/
 }

@@ -1,15 +1,15 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.Builder;
 import lombok.Data;
 import ru.yandex.practicum.filmorate.annotation.AfterOrEqualDate;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
-@Builder
 public class Film {
     protected int id;
     @NotEmpty(message = "Имя не может быть пустым")
@@ -21,4 +21,17 @@ public class Film {
     protected String releaseDate;
     @Positive(message = "Продолжительность фильма должна быть положительным числом")
     protected int duration;
+    protected Set<Integer> likes = new HashSet<>();
+
+    public void addLike(int id) {
+        likes.add(id);
+    }
+
+    public void deleteLike(int id) {
+        likes.remove(id);
+    }
+
+    public Set<Integer> getLikes() {
+        return new HashSet<>(likes);
+    }
 }
