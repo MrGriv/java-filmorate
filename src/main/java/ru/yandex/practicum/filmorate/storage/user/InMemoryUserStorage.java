@@ -58,7 +58,7 @@ public class InMemoryUserStorage implements UserStorage {
         if (users.containsKey(id)) {
             users.remove(id);
         } else {
-            throw new UserNotFoundException("Нет пользователя с " + id + " для удаления ");
+            throw new UserNotFoundException("Нет пользователя с id " + id + " для удаления ");
         }
     }
 
@@ -67,7 +67,7 @@ public class InMemoryUserStorage implements UserStorage {
         User user = users.get(id);
 
         if (user == null) {
-            throw new UserNotFoundException("Нет пользователя с " + id);
+            throw new UserNotFoundException("Нет пользователя с id " + id);
         }
 
         return users.get(id);
