@@ -1,9 +1,9 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import javax.validation.Valid;
@@ -12,10 +12,14 @@ import java.util.List;
 
 @RequestMapping
 @RestController
-@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
     private final UserStorage userStorage;
+
+    public UserController(UserService userService, InMemoryUserStorage userStorage) {
+        this.userService = userService;
+        this.userStorage = userStorage;
+    }
 
     @GetMapping("/users")
     public Collection<User> findAll() {
