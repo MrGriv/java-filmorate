@@ -53,6 +53,7 @@ public class UserService {
         for (int friend : user.getFriends()) {
             friends.add(userStorage.findUser(friend));
         }
+        
         return friends;
     }
 
