@@ -1,6 +1,6 @@
 # java-filmorate
 
-![database.png](database.png)
+![img.png](img.png)
 
 **Получение всех фильмов:**
 
