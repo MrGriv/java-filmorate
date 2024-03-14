@@ -4,13 +4,13 @@
 
 **Получение всех фильмов:**
 
-SELECT DISTINCT name, description, genre
+SELECT *
 
 FROM films
 
 **Получение всех пользователей:**
 
-SELECT DISTINCT name, login, email, birthday
+SELECT *
 
 FROM users
 
