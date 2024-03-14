@@ -4,7 +4,7 @@
 
 **Получение всех фильмов:**
 
-SELECT DISTINCT name, description, releasedate, duration, genre, rating
+SELECT DISTINCT name, description, genre
 
 FROM films
 
@@ -16,20 +16,24 @@ FROM users
 
 **Получение топ 50 фильмов:**
 
-SELECT name, COUNT(likes from users)
+SELECT name
 
 FROM films
 
-GROUP BY name
+WHERE film_id IN (SELECT film_id, COUNT(user_id)
 
-ORDER BY COUNT(likes from users) DESC
+FROM likes_from_users
 
-LIMIT 50
+GROUP BY film_id
+
+ORDER BY COUNT(user_id) DESC
+
+LIMIT 50)
 
 **Получение списка общих друзей с пользователем 1:**
 
 SELECT friend_id
 
-FROM users
+FROM friends
 
 WHERE user_id = 1
