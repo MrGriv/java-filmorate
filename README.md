@@ -30,10 +30,16 @@ ORDER BY COUNT(user_id) DESC
 
 LIMIT 50)
 
-**Получение списка общих друзей с пользователем 1:**
+**Получение списка общих друзей пользователя 1 с пользователем 2:**
 
-SELECT friend_id
+SELECT u.friend_id
+
+FROM (SELECT friend_id
 
 FROM friends
 
-WHERE user_id = 1
+WHERE user_id = 1) AS u
+
+INNER JOIN friends AS f ON f.friend_id = u.friend_id
+
+WHERE user_id = 2
