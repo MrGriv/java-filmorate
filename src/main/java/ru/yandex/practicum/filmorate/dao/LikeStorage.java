@@ -6,6 +6,8 @@ import java.util.Collection;
 
 public interface LikeStorage {
     void addLike(int filmId, int userId);
+
     void deleteLike(int filmId, int userId);
+
     Collection<Film> getPopularFilms(int count);
 }
