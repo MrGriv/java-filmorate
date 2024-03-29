@@ -37,7 +37,7 @@ public class GenreDbStorage implements GenreStorage {
     }
 
     private Genre makeGenre(SqlRowSet genreRows) {
-        if(genreRows.next()) {
+        if (genreRows.next()) {
             Genre genre = new Genre();
             genre.setId(genreRows.getInt("GENRE_ID"));
             genre.setName(genreRows.getString("GENRE_NAME"));

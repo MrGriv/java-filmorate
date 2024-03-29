@@ -37,7 +37,7 @@ public class RatingDbStorage implements RatingStorage {
     }
 
     private Rating makeRating(SqlRowSet ratingRows) {
-        if(ratingRows.next()) {
+        if (ratingRows.next()) {
             Rating rating = new Rating();
             rating.setId(ratingRows.getInt("RATING_ID"));
             rating.setName(ratingRows.getString("RATING_NAME"));
