@@ -63,6 +63,17 @@ class UserDbStorageTest {
     }
 
     @Test
+    public void findAllUsers() {
+        UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
+        Collection<User> dbUsers = userStorage.findAll();
+        List<User> users = new ArrayList<>(dbUsers);
+        assertTrue(users.contains(userStorage.findUser(1)));
+        assertTrue(users.contains(userStorage.findUser(2)));
+        assertTrue(users.contains(userStorage.findUser(3)));
+        assertEquals(3, users.size());
+    }
+
+    @Test
     public void testDeleteUser() {
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
         User user = new User();
@@ -89,17 +100,5 @@ class UserDbStorageTest {
                 .usingRecursiveComparison()
                 .isEqualTo(user);
         assertEquals("Пользователь не найден.", exception.getMessage());
-    }
-    
-    @Test
-    public void findAllUsers() {
-        UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
-        Collection<User> dbUsers = userStorage.findAll();
-        List<User> users = new ArrayList<>(dbUsers);
-        
-        assertTrue(users.contains(userStorage.findUser(1)));
-        assertTrue(users.contains(userStorage.findUser(2)));
-        assertTrue(users.contains(userStorage.findUser(3)));
-        assertEquals(3, users.size());
     }
 }
