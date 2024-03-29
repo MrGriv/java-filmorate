@@ -28,7 +28,6 @@ public class UserDbStorage implements UserStorage {
 
         while (userRows.next()) {
             User user = new User();
-
             user.setId(userRows.getInt("USER_ID"));
             user.setEmail(userRows.getString("EMAIL"));
             user.setLogin(userRows.getString("LOGIN"));
@@ -87,7 +86,7 @@ public class UserDbStorage implements UserStorage {
     }
 
     public User makeUser(SqlRowSet userRows) {
-        if(userRows.next()) {
+        if (userRows.next()) {
             User user = new User();
             user.setId(userRows.getInt("USER_ID"));
             user.setEmail(userRows.getString("EMAIL"));

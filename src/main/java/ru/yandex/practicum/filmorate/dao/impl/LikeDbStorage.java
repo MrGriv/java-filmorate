@@ -66,7 +66,7 @@ public class LikeDbStorage implements LikeStorage {
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet(sql, count);
 
         while (filmRows.next()) {
-            Film film = new Film ();
+            Film film = new Film();
 
             film.setId(filmRows.getInt("FILM_ID"));
             film.setName(filmRows.getString("FILM_NAME"));

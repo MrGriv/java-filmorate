@@ -34,8 +34,7 @@ public class FilmDbStorage implements FilmStorage {
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT * FROM FILMS");
 
         while (filmRows.next()) {
-            Film film = new Film ();
-
+            Film film = new Film();
             film.setId(filmRows.getInt("FILM_ID"));
             film.setName(filmRows.getString("FILM_NAME"));
             film.setDescription(filmRows.getString("DESCRIPTION"));
@@ -119,8 +118,8 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     private Film makeFilm(SqlRowSet filmRows) {
-        if(filmRows.next()) {
-            Film film = new Film ();
+        if (filmRows.next()) {
+            Film film = new Film();
             film.setId(filmRows.getInt("FILM_ID"));
             film.setName(filmRows.getString("FILM_NAME"));
             film.setDescription(filmRows.getString("DESCRIPTION"));
