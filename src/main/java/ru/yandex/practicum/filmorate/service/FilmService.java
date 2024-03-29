@@ -33,6 +33,7 @@ public class FilmService {
     public Collection<Rating> getRating() {
         return ratingStorage.getRating();
     }
+
     public Rating getRatingById(int ratingId) {
         return ratingStorage.getRatingById(ratingId);
     }
