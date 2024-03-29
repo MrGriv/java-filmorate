@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
@@ -12,10 +12,14 @@ import java.util.List;
 
 @RequestMapping
 @RestController
-@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
     private final UserStorage userStorage;
+
+    public UserController(UserService userService, @Qualifier("userDbStorage") UserStorage userStorage) {
+        this.userService = userService;
+        this.userStorage = userStorage;
+    }
 
     @GetMapping("/users")
     public Collection<User> findAll() {
@@ -50,6 +54,11 @@ public class UserController {
     @PutMapping("/users/{id}/friends/{friendId}")
     public void addFriend(@PathVariable int id, @PathVariable int friendId) {
         userService.addFriend(id, friendId);
+    }
+
+    @DeleteMapping("/users/{id}")
+    public void deleteFriend(@PathVariable int id) {
+        userStorage.deleteUser(id);
     }
 
     @DeleteMapping("/users/{id}/friends/{friendId}")
