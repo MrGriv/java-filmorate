@@ -88,7 +88,7 @@ public class FilmDbStorage implements FilmStorage {
         return makeFilm(filmRows);
     }
 
-    public Film makeFilm(SqlRowSet filmRows) {;
+    public Film makeFilm(SqlRowSet filmRows) {
         if (filmRows.next()) {
             Film film = new Film();
             film.setId(filmRows.getInt("FILM_ID"));
