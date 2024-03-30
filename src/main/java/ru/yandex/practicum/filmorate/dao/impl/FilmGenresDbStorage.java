@@ -68,7 +68,7 @@ public class FilmGenresDbStorage implements FilmGenresStorage {
         if (!filmsId.isEmpty()) {
             numbers += filmsId.get(0);
             if (filmsId.size() > 1) {
-                for (int i = 1; i < filmsId.size(); i++ ) {
+                for (int i = 1; i < filmsId.size(); i++) {
                     numbers += ", " + filmsId.get(i);
                 }
             }
