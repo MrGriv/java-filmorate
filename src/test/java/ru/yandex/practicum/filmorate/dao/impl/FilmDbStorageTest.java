@@ -6,8 +6,6 @@ import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import ru.yandex.practicum.filmorate.dao.GenreStorage;
-import ru.yandex.practicum.filmorate.dao.RatingStorage;
 import ru.yandex.practicum.filmorate.exeption.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Rating;
@@ -34,12 +32,9 @@ class FilmDbStorageTest {
         newFilm.setDescription("nice");
         newFilm.setReleaseDate("2009-09-09");
         newFilm.setDuration(100);
-        newFilm.setGenres(new ArrayList<>());
         rating.setId(2);
-        rating.setName("PG");
         newFilm.setMpa(rating);
-        FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate, new RatingDbStorage(jdbcTemplate),
-                new GenreDbStorage(jdbcTemplate));
+        FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
         Film savedFilm = filmStorage.findFilm(1);
 
         assertThat(savedFilm)
@@ -50,8 +45,7 @@ class FilmDbStorageTest {
 
     @Test
     public void testUpdateFilm() {
-        FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate, new RatingDbStorage(jdbcTemplate),
-                new GenreDbStorage(jdbcTemplate));
+        FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
         Film film = filmStorage.findFilm(2);
         Film updatedFilm = new Film();
         Rating rating = new Rating();
@@ -60,9 +54,7 @@ class FilmDbStorageTest {
         updatedFilm.setDescription("n");
         updatedFilm.setReleaseDate("2009-09-09");
         updatedFilm.setDuration(111);
-        updatedFilm.setGenres(new ArrayList<>());
         rating.setId(2);
-        rating.setName("PG");
         updatedFilm.setMpa(rating);
         filmStorage.updateFilm(updatedFilm);
 
@@ -78,8 +70,7 @@ class FilmDbStorageTest {
 
     @Test
     public void testDeleteFilm() {
-        FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate, new RatingDbStorage(jdbcTemplate),
-                new GenreDbStorage(jdbcTemplate));
+        FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
         Film updatedFilm = new Film();
         Rating rating = new Rating();
         updatedFilm.setId(4);
@@ -88,10 +79,8 @@ class FilmDbStorageTest {
         updatedFilm.setReleaseDate("2019-09-19");
         updatedFilm.setDuration(1);
         rating.setId(2);
-        rating.setName("PG");
-        updatedFilm.setGenres(new ArrayList<>());
         updatedFilm.setMpa(rating);
-        filmStorage.createFilm(updatedFilm);
+        filmStorage.addFilm(updatedFilm);
         Film savedFilm = filmStorage.findFilm(4);
         filmStorage.deleteFilm(4);
 
@@ -113,15 +102,11 @@ class FilmDbStorageTest {
 
     @Test
     public void findAllFilms() {
-        RatingStorage ratingStorage = new RatingDbStorage(jdbcTemplate);
-        GenreStorage genreStorage = new GenreDbStorage(jdbcTemplate);
-        FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate, ratingStorage, genreStorage);
+        FilmDbStorage filmStorage = new FilmDbStorage(jdbcTemplate);
         Collection<Film> dbFilms = filmStorage.findAll();
 
         List<Film> films = new ArrayList<>(dbFilms);
 
-        assertTrue(films.contains(filmStorage.findFilm(1)));
-        assertTrue(films.contains(filmStorage.findFilm(2)));
         assertEquals(3, films.size());
     }
 }

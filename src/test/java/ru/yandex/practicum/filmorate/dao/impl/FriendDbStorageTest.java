@@ -18,21 +18,21 @@ class FriendDbStorageTest {
 
     @Test
     public void shouldReturnFriends() {
-        FriendStorage friendStorage = new FriendDbStorage(jdbcTemplate, new UserDbStorage(jdbcTemplate));
+        FriendStorage friendStorage = new FriendDbStorage(jdbcTemplate);
         assertEquals(1, friendStorage.getFriends(1).size());
     }
 
     @Test
     public void shouldReturnCommonFriends() {
         UserStorage userStorage = new UserDbStorage(jdbcTemplate);
-        FriendStorage friendStorage = new FriendDbStorage(jdbcTemplate, userStorage);
+        FriendStorage friendStorage = new FriendDbStorage(jdbcTemplate);
         assertEquals(userStorage.findUser(3), friendStorage.getCommonFriends(1, 2).get(0));
     }
 
     @Test
     public void shouldAddFriend() {
         UserStorage userStorage = new UserDbStorage(jdbcTemplate);
-        FriendStorage friendStorage = new FriendDbStorage(jdbcTemplate, userStorage);
+        FriendStorage friendStorage = new FriendDbStorage(jdbcTemplate);
         friendStorage.addFriend(3,1);
         User user = friendStorage.getFriends(3).get(0);
         friendStorage.deleteFriend(3,1);

@@ -19,7 +19,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film createFilm(Film film) {
+    public Film addFilm(Film film) {
         film.setId(++id);
 
         log.trace("film: {}", film);

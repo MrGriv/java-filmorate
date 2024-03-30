@@ -6,27 +6,21 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.dao.GenreStorage;
-import ru.yandex.practicum.filmorate.dao.RatingStorage;
 import ru.yandex.practicum.filmorate.exeption.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
-import javax.validation.ValidationException;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class FilmDbStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
-    private final RatingStorage ratingStorage;
-    private final GenreStorage genreStorage;
 
     @Override
     public Collection<Film> findAll() {
@@ -40,22 +34,13 @@ public class FilmDbStorage implements FilmStorage {
             film.setDescription(filmRows.getString("DESCRIPTION"));
             film.setReleaseDate(filmRows.getDate("RELEASE_DATE").toString());
             film.setDuration(filmRows.getInt("DURATION"));
-            film.setMpa(ratingStorage.getRatingById(filmRows.getInt("RATING_ID")));
-
-            SqlRowSet genreRows = jdbcTemplate.queryForRowSet("SELECT * FROM FILM_GENRES WHERE FILM_ID = ?",
-                    filmRows.getInt("FILM_ID"));
-            List<Genre> genres = new ArrayList<>();
-            while (genreRows.next()) {
-                genres.add(genreStorage.getGenreById(genreRows.getInt("GENRE_ID")));
-            }
-            film.setGenres(genres);
             films.add(film);
         }
         return films;
     }
 
     @Override
-    public Film createFilm(Film film) {
+    public Film addFilm(Film film) {
         String sql = "INSERT INTO FILMS (FILM_NAME, DESCRIPTION, RELEASE_DATE, DURATION, RATING_ID)" +
                 " VALUES (?, ?, ?, ?, ?)";
 
@@ -66,25 +51,12 @@ public class FilmDbStorage implements FilmStorage {
             ps.setString(2, film.getDescription());
             ps.setDate(3, Date.valueOf(film.getReleaseDate()));
             ps.setInt(4, film.getDuration());
-            if (film.getMpa().getId() > ratingStorage.getRating().size()) {
-                throw new ValidationException("Рейтинг с id=" + film.getMpa().getId() + "отсутствует");
-            }
             ps.setInt(5, film.getMpa().getId());
             return ps;
         }, keyHolder);
         int id = keyHolder.getKey().intValue();
-
-        String sqlGenres = "MERGE INTO FILM_GENRES (FILM_ID, GENRE_ID) VALUES (?, ?)";
-        if (film.getGenres() != null) {
-            for (Genre genre : film.getGenres()) {
-                if (genre.getId() > genreStorage.getGenres().size()) {
-                    throw new ValidationException("Жанр с id=" + genre.getId() + "отсутствует");
-                }
-                jdbcTemplate.update(sqlGenres, id, genre.getId());
-            }
-        }
-        SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT * FROM FILMS WHERE FILM_ID = ?", id);
-        return makeFilm(filmRows);
+        film.setId(id);
+        return film;
     }
 
     @Override
@@ -100,9 +72,8 @@ public class FilmDbStorage implements FilmStorage {
         } else {
             throw new FilmNotFoundException("Фильм c id = " + film.getId() + " не найден.");
         }
-        SqlRowSet updatedFilmRows = jdbcTemplate.queryForRowSet("SELECT * FROM FILMS WHERE FILM_ID = ?",
-                film.getId());
-        return makeFilm(updatedFilmRows);
+
+        return film;
     }
 
     @Override
@@ -117,7 +88,7 @@ public class FilmDbStorage implements FilmStorage {
         return makeFilm(filmRows);
     }
 
-    private Film makeFilm(SqlRowSet filmRows) {
+    public Film makeFilm(SqlRowSet filmRows) {;
         if (filmRows.next()) {
             Film film = new Film();
             film.setId(filmRows.getInt("FILM_ID"));
@@ -125,16 +96,9 @@ public class FilmDbStorage implements FilmStorage {
             film.setDescription(filmRows.getString("DESCRIPTION"));
             film.setReleaseDate(filmRows.getDate("RELEASE_DATE").toString());
             film.setDuration(filmRows.getInt("DURATION"));
-            film.setMpa(ratingStorage.getRatingById(filmRows.getInt("RATING_ID")));
-
-            SqlRowSet genreRows = jdbcTemplate.queryForRowSet("SELECT * FROM FILM_GENRES WHERE FILM_ID = ?",
-                    filmRows.getInt("FILM_ID"));
-            List<Genre> genres = new ArrayList<>();
-            while (genreRows.next()) {
-                genres.add(genreStorage.getGenreById(genreRows.getInt("GENRE_ID")));
-            }
-            film.setGenres(genres);
-
+            Rating rating = new Rating();
+            rating.setId(filmRows.getInt("RATING_ID"));
+            film.setMpa(rating);
             return film;
         } else {
             throw new FilmNotFoundException("Фильм не найден.");

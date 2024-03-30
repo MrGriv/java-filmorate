@@ -5,11 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import ru.yandex.practicum.filmorate.dao.GenreStorage;
 import ru.yandex.practicum.filmorate.dao.LikeStorage;
-import ru.yandex.practicum.filmorate.dao.RatingStorage;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,12 +17,7 @@ class LikeDbStorageTest {
 
     @Test
     public void shouldDeleteLike() {
-        RatingStorage ratingStorage = new RatingDbStorage(jdbcTemplate);
-        GenreStorage genreStorage = new GenreDbStorage(jdbcTemplate);
-        FilmStorage filmStorage = new FilmDbStorage(jdbcTemplate, ratingStorage, genreStorage);
-        UserStorage userStorage = new UserDbStorage(jdbcTemplate);
-        LikeStorage likeStorage = new LikeDbStorage(jdbcTemplate, filmStorage,userStorage,ratingStorage, genreStorage);
-
+        LikeStorage likeStorage = new LikeDbStorage(jdbcTemplate);
 
         likeStorage.deleteLike(3, 1);
 
@@ -35,11 +27,7 @@ class LikeDbStorageTest {
 
     @Test
     public void shouldAddLike() {
-        RatingStorage ratingStorage = new RatingDbStorage(jdbcTemplate);
-        GenreStorage genreStorage = new GenreDbStorage(jdbcTemplate);
-        FilmStorage filmStorage = new FilmDbStorage(jdbcTemplate, ratingStorage, genreStorage);
-        UserStorage userStorage = new UserDbStorage(jdbcTemplate);
-        LikeStorage likeStorage = new LikeDbStorage(jdbcTemplate, filmStorage,userStorage,ratingStorage, genreStorage);
+        LikeStorage likeStorage = new LikeDbStorage(jdbcTemplate);
 
         likeStorage.addLike(3, 2);
 
@@ -48,11 +36,8 @@ class LikeDbStorageTest {
 
     @Test
     public void shouldReturnMostPopularFilm() {
-        RatingStorage ratingStorage = new RatingDbStorage(jdbcTemplate);
-        GenreStorage genreStorage = new GenreDbStorage(jdbcTemplate);
-        FilmStorage filmStorage = new FilmDbStorage(jdbcTemplate, ratingStorage, genreStorage);
-        UserStorage userStorage = new UserDbStorage(jdbcTemplate);
-        LikeStorage likeStorage = new LikeDbStorage(jdbcTemplate, filmStorage,userStorage,ratingStorage, genreStorage);
+        FilmStorage filmStorage = new FilmDbStorage(jdbcTemplate);
+        LikeStorage likeStorage = new LikeDbStorage(jdbcTemplate);
 
         assertEquals(1, likeStorage.getPopularFilms(1).size());
         assertTrue(likeStorage.getPopularFilms(1).contains(filmStorage.findFilm(1)));
