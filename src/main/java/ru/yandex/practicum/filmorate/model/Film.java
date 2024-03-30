@@ -6,7 +6,6 @@ import ru.yandex.practicum.filmorate.annotation.AfterOrEqualDate;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.Collection;
 
 @Data
