@@ -6,40 +6,42 @@
 
 SELECT *
 
-FROM films
+FROM FILMS
 
 **Получение всех пользователей:**
 
 SELECT *
 
-FROM users
+FROM USERS
 
 **Получение топ 50 фильмов:**
 
-SELECT name
+SELECT F.* FROM 
 
-FROM films
+(SELECT FILM_ID 
 
-WHERE film_id IN (SELECT film_id, COUNT(user_id)
+FROM LIKES 
 
-FROM likes_from_users
+GROUP BY FILM_ID 
 
-GROUP BY film_id
+ORDER BY COUNT(USER_ID) DESC
 
-ORDER BY COUNT(user_id) DESC
+LIMIT ?) AS L 
 
-LIMIT 50)
+INNER JOIN FILMS AS F ON L.FILM_ID=F.FILM_ID
 
 **Получение списка общих друзей пользователя 1 с пользователем 2:**
 
-SELECT u.friend_id
+SELECT * FROM USERS WHERE USER_ID IN
 
-FROM (SELECT friend_id
+(SELECT U.FRIEND_ID 
 
-FROM friends
+FROM (SELECT *
 
-WHERE user_id = 1) AS u
+FROM FRIENDS 
 
-INNER JOIN friends AS f ON f.friend_id = u.friend_id
+WHERE USER_ID = 1) AS U 
 
-WHERE user_id = 2
+INNER JOIN FRIENDS AS F ON F.FRIEND_ID = U.FRIEND_ID 
+
+WHERE F.USER_ID = 2)
